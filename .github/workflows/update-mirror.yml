@@ -1,0 +1,54 @@
+# -----------------------------------------------------------------------------
+# Auto-regenerate the network-mirror index after every release publication.
+#
+# Triggers on `release: [published]` — which fires after goreleaser finishes
+# uploading assets in release.yml. Downloads the SHA256SUMS from the new
+# release, computes h1: hashes for every platform zip, and commits the
+# updated mirror/ JSONs to main.
+#
+# Consumers (i.e. LavndrCommunity/it-infra) point their OpenTofu network_mirror
+# at raw.githubusercontent.com/.../mirror/ so they can resolve new versions
+# without manual steps here.
+# -----------------------------------------------------------------------------
+
+name: Update mirror index
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          # Use the default GITHUB_TOKEN; we push back to main.
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Update mirror index
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: python3 scripts/update_mirror.py "$TAG"
+
+      - name: Commit and push if changed
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mirror/
+          if git diff --cached --quiet; then
+            echo "No mirror changes — already up to date."
+            exit 0
+          fi
+          git commit -m "chore(mirror): add $TAG"
+          git push origin main
