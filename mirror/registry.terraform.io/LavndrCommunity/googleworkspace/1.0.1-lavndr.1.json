@@ -1,0 +1,70 @@
+{
+  "archives": {
+    "darwin_amd64": {
+      "url": "https://github.com/LavndrCommunity/terraform-provider-googleworkspace/releases/download/v1.0.1-lavndr.1/terraform-provider-googleworkspace_1.0.1-lavndr.1_darwin_amd64.zip",
+      "hashes": [
+        "h1:6Riyisgmuy4ZBFgxmTybckrP9UnkLAJPwK9b1gDmuWc="
+      ]
+    },
+    "darwin_arm64": {
+      "url": "https://github.com/LavndrCommunity/terraform-provider-googleworkspace/releases/download/v1.0.1-lavndr.1/terraform-provider-googleworkspace_1.0.1-lavndr.1_darwin_arm64.zip",
+      "hashes": [
+        "h1:8803jG5Lb5kiqOG+ete/KRA2GW9ip6QVJ/hFIL9aDKA="
+      ]
+    },
+    "freebsd_386": {
+      "url": "https://github.com/LavndrCommunity/terraform-provider-googleworkspace/releases/download/v1.0.1-lavndr.1/terraform-provider-googleworkspace_1.0.1-lavndr.1_freebsd_386.zip",
+      "hashes": [
+        "h1:PkEpXzssRdB6rGh10C6bWVMDVy9E1FzGybh2ZOpwW0w="
+      ]
+    },
+    "freebsd_amd64": {
+      "url": "https://github.com/LavndrCommunity/terraform-provider-googleworkspace/releases/download/v1.0.1-lavndr.1/terraform-provider-googleworkspace_1.0.1-lavndr.1_freebsd_amd64.zip",
+      "hashes": [
+        "h1:HHNR6aofeEit4YBOGCTe08Fxdkssg1I58yyfdkT6bYc="
+      ]
+    },
+    "freebsd_arm": {
+      "url": "https://github.com/LavndrCommunity/terraform-provider-googleworkspace/releases/download/v1.0.1-lavndr.1/terraform-provider-googleworkspace_1.0.1-lavndr.1_freebsd_arm.zip",
+      "hashes": [
+        "h1:RsPoj0Rk2GoaTIXbtbJxQksBYDrO1YRiPjr6DfNCwTg="
+      ]
+    },
+    "linux_386": {
+      "url": "https://github.com/LavndrCommunity/terraform-provider-googleworkspace/releases/download/v1.0.1-lavndr.1/terraform-provider-googleworkspace_1.0.1-lavndr.1_linux_386.zip",
+      "hashes": [
+        "h1:SZA4W2FdBNm3KjufCQz0oErznxKRJ2mXoeK9czqAyqE="
+      ]
+    },
+    "linux_amd64": {
+      "url": "https://github.com/LavndrCommunity/terraform-provider-googleworkspace/releases/download/v1.0.1-lavndr.1/terraform-provider-googleworkspace_1.0.1-lavndr.1_linux_amd64.zip",
+      "hashes": [
+        "h1:QItO8wmK7xFY5wS+bek+OL935HD5J+DNe/vO1X1sFic="
+      ]
+    },
+    "linux_arm": {
+      "url": "https://github.com/LavndrCommunity/terraform-provider-googleworkspace/releases/download/v1.0.1-lavndr.1/terraform-provider-googleworkspace_1.0.1-lavndr.1_linux_arm.zip",
+      "hashes": [
+        "h1:dNcOwDm+uR1JXS+QXWEuDj0hplE7EZB2/yIisv96bHQ="
+      ]
+    },
+    "linux_arm64": {
+      "url": "https://github.com/LavndrCommunity/terraform-provider-googleworkspace/releases/download/v1.0.1-lavndr.1/terraform-provider-googleworkspace_1.0.1-lavndr.1_linux_arm64.zip",
+      "hashes": [
+        "h1:HtAJWdt5hlA71cok4vOQ7EmnHp3aoG2IZdf7ZFgehEQ="
+      ]
+    },
+    "windows_386": {
+      "url": "https://github.com/LavndrCommunity/terraform-provider-googleworkspace/releases/download/v1.0.1-lavndr.1/terraform-provider-googleworkspace_1.0.1-lavndr.1_windows_386.zip",
+      "hashes": [
+        "h1:N932inFz0cO9REIfyhIFC6anks3Y7tHNF9lElq6siC4="
+      ]
+    },
+    "windows_amd64": {
+      "url": "https://github.com/LavndrCommunity/terraform-provider-googleworkspace/releases/download/v1.0.1-lavndr.1/terraform-provider-googleworkspace_1.0.1-lavndr.1_windows_amd64.zip",
+      "hashes": [
+        "h1:uilSjtaHI/DY+B9r4vcLfOVUbVoveHGYD4xSh7hbAuI="
+      ]
+    }
+  }
+}
