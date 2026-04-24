@@ -28,7 +28,7 @@ import sys
 import urllib.request
 from pathlib import Path
 
-MIRROR_DIR = Path("mirror/registry.terraform.io/LavndrCommunity/googleworkspace")
+MIRROR_DIR = Path("mirror/registry.opentofu.org/lavndrcommunity/googleworkspace")
 RELEASE_URL_TMPL = (
     "https://github.com/LavndrCommunity/terraform-provider-googleworkspace"
     "/releases/download/{tag}/{fname}"
