@@ -31,7 +31,8 @@ The release workflow (`.github/workflows/release.yml`, inherited from upstream) 
    gpg --armor --export-secret-keys ops@lavndr.community > private.asc
    ```
 3. **Store the public key** where consumers can verify signatures — key server, a file in this repo, or the `it-infra` docs. For now, attach the `.asc` public key to the first GitHub Release and note the fingerprint here:
-   > GPG fingerprint: **TBD — fill in after first key generation**
+   > GPG fingerprint: `BBD614EB5E2D6DB6441439A078525BAAF90C3396`
+   > Key: `rsa4096/78525BAAF90C3396`, name `Lavndr Community <ops@lavndr.community>`, generated 2026-04-24.
 4. **Add secrets** to this repo → Settings → Secrets and variables → Actions:
    - `GPG_PRIVATE_KEY` — contents of `private.asc`
    - `PASSPHRASE` — the passphrase from step 1
