@@ -1,0 +1,108 @@
+# -----------------------------------------------------------------------------
+# Weekly upstream sync.
+#
+# This fork tracks arslanbekov/terraform-provider-googleworkspace. Every Monday
+# this workflow fetches upstream/main, and if we're behind, opens a PR with the
+# merge so a human can eyeball the diff before it lands. CI catches regressions;
+# this review step catches things CI can't — removed resources, schema changes,
+# behavior drift — per the bus-factor plan in LavndrCommunity/it-infra.
+#
+# Manual trigger: Actions → Sync with upstream → Run workflow.
+# -----------------------------------------------------------------------------
+
+name: Sync with upstream
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # Mondays 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch upstream
+        run: |
+          git remote add upstream https://github.com/arslanbekov/terraform-provider-googleworkspace.git
+          git fetch upstream main
+
+      - name: Count upstream commits we're missing
+        id: check
+        run: |
+          BEHIND=$(git rev-list --count HEAD..upstream/main)
+          echo "behind=$BEHIND" >> "$GITHUB_OUTPUT"
+          echo "Behind upstream/main by $BEHIND commit(s)."
+
+      - name: Abort if already up to date
+        if: steps.check.outputs.behind == '0'
+        run: echo "Nothing to sync."
+
+      - name: Skip if sync PR already open
+        if: steps.check.outputs.behind != '0'
+        id: existing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          OPEN=$(gh pr list --state open --search "head:sync/upstream- in:title" --json number --jq 'length')
+          echo "open=$OPEN" >> "$GITHUB_OUTPUT"
+          if [ "$OPEN" != "0" ]; then
+            echo "A sync PR is already open — skipping to avoid duplicates."
+          fi
+
+      - name: Create sync branch and merge
+        if: steps.check.outputs.behind != '0' && steps.existing.outputs.open == '0'
+        id: merge
+        run: |
+          BRANCH="sync/upstream-$(date -u +%Y%m%d)"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+          git checkout -b "$BRANCH"
+          # --no-ff so the merge commit is always a review anchor, even when
+          # upstream is a fast-forward. Lets us revert the whole sync with one
+          # commit if needed.
+          git merge upstream/main --no-ff -m "sync: merge upstream/main ($(git rev-parse --short upstream/main))"
+          git push origin "$BRANCH"
+
+      - name: Open PR
+        if: steps.check.outputs.behind != '0' && steps.existing.outputs.open == '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          UPSTREAM_SHA=$(git rev-parse --short upstream/main)
+          BEHIND="${{ steps.check.outputs.behind }}"
+          BRANCH="${{ steps.merge.outputs.branch }}"
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "sync: upstream ($BEHIND new commit(s), $UPSTREAM_SHA)" \
+            --body "$(cat <<EOF
+          Weekly upstream sync from \`arslanbekov/terraform-provider-googleworkspace\`.
+
+          **Behind by**: $BEHIND commit(s)
+          **Upstream HEAD**: \`$UPSTREAM_SHA\`
+          **Compare**: https://github.com/arslanbekov/terraform-provider-googleworkspace/compare/${UPSTREAM_SHA}...arslanbekov:main
+
+          ### Review checklist
+
+          - [ ] Diff is incremental — no resources removed or renamed
+          - [ ] No schema breaks on existing resources (check \`internal/provider/resource_*.go\`)
+          - [ ] CI is green
+          - [ ] If behavior changes, note it in \`FORK.md\` so consumers know before upgrading
+          - [ ] If this PR introduces something we actively want downstream, follow the release process (tag \`v<upstream>-lavndr.<n>\`, goreleaser publishes a GitHub Release)
+
+          See \`LavndrCommunity/it-infra\` → \`.claude/plans/workspace-iac-coverage.md\` for the bus-factor plan.
+          EOF
+          )"
